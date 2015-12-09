@@ -93,7 +93,7 @@ public class LiftSim extends Application{
         addLiftBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Lift lift = new Lift(floors, lifts.size() + 1);
+                Lift lift = new Lift(floors);
                 lifts.add(lift);
                 vbox.getChildren().addAll(lift.grid);
             }
