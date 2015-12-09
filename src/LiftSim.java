@@ -108,8 +108,14 @@ public class LiftSim extends Application{
         //actions
 
         for (Polygon upButton : upButtons) {
-            UpButtonHandler upButtonHandler = new UpButtonHandler(lift, upButton);
-            upButton.setOnMouseClicked(upButtonHandler);
+
+            upButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    lift.upButtons[(int) upButton.getUserData()].push();
+                    upButton.setFill(Color.RED);
+                }
+            });
         }
 
         for (Polygon downButton : downButtons)
@@ -133,54 +139,25 @@ public class LiftSim extends Application{
                 }
             });
         }
-/*
-        runBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+        elevator.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-                lift.run();
-
-                grid.getChildren().remove(elevator);
-                grid.add(elevator, 4, floors + 1 - lift.currentFloor);
-
-                for (Polygon upButton : upButtons)
-                {
-                    if(lift.upButtons[(int)upButton.getUserData()].on) upButton.setFill(Color.RED);
-                    else upButton.setFill(Color.BLACK);
-                }
-
-                for (Polygon downButton : downButtons)
-                {
-                    System.out.println("cur floor: " + lift.currentFloor);
-                    System.out.println((int)downButton.getUserData() + "  : " + lift.downButtons[(int)downButton.getUserData()].on );
-                    if(lift.downButtons[(int)downButton.getUserData()].on) downButton.setFill(Color.RED);
-                    else downButton.setFill(Color.BLACK);
-                }
-
-                for (Circle innerButton : innerButtons)
-                {
-                    if(lift.innerButtons[(int)innerButton.getUserData()].on) innerButton.setFill(Color.RED);
-                    else innerButton.setFill(Color.BLACK);
-                }
+            public void handle(MouseEvent event) {
+                lift.floorSensor.toggle();
+                elevator.setFill(lift.floorSensor.on ? Color.GREEN : Color.RED);
             }
-        });*/
+        });
 
-        ButtonHandler buttonHandler = new ButtonHandler(lift, grid, elevator, upButtons, downButtons, innerButtons);
+        ButtonHandler buttonHandler = new ButtonHandler(lift, grid, runBtn, elevator, upButtons, downButtons, innerButtons);
         runBtn.setOnAction(buttonHandler);
-
-        ClickHandler clickHandler = new ClickHandler(lift, elevator);
-
-        elevator.setOnMouseClicked(clickHandler);
 
 
         // set scene
+
         Scene scene = new Scene(grid, 300, 275);
-
-        primaryStage.setTitle("Weather System");
-
+        primaryStage.setTitle("Lift Simulator");
         primaryStage.setScene(scene);
-
         primaryStage.show();
-
     }
 
     public static void main(String[] args) {
