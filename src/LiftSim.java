@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 public class LiftSim extends Application{
 
     int floors = 5;
+    GridPane grid;
     Lift lift = new Lift(floors);
     Polygon[] upButtons = new Polygon[floors];
     Polygon[] downButtons = new Polygon[floors];
@@ -45,6 +46,7 @@ public class LiftSim extends Application{
         // setup grid pane
 
         GridPane grid = new GridPane();
+        this.grid = grid;
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -55,21 +57,24 @@ public class LiftSim extends Application{
         Button runBtn = new Button("Run");
         grid.add(runBtn, 0, 0);
 
+        Button addLiftBtn = new Button("Add Lift");
+        grid.add(addLiftBtn, 1, 0, 2, 1);
+
         Text outerButtonsTitle = new Text("Outer Buttons");
-        grid.add(outerButtonsTitle, 1, 0, 3, 1);
+        grid.add(outerButtonsTitle, 1, 1, 2, 1);
 
         Text elevatorTitle = new Text("Elevator");
-        grid.add(elevatorTitle, 4, 0, 2, 1);
+        grid.add(elevatorTitle, 4, 1, 2, 1);
 
         Rectangle elevator = new Rectangle(10.0,10.0);
         elevator.setFill(Color.RED);
-        grid.add(elevator, 4, floors + 1);
+        grid.add(elevator, 4, floors + 2);
 
         for(int i =0; i <= floors; i++)
         {
             // add the floor number
             Text floorNumber = new Text(""+i);
-            grid.add(floorNumber, 0, floors-i+1);
+            grid.add(floorNumber, 0, floors-i+2);
 
             // add an up button to every floor except the top floor
             if(i<floors)
@@ -80,7 +85,7 @@ public class LiftSim extends Application{
                         5.0, 0.0,
                         10.0, 10.0);
                 upButton.setUserData(i);
-                grid.add(upButton, 1, floors - i + 1);
+                grid.add(upButton, 1, floors - i + 2);
                 upButtons[i] = upButton;
             }
 
@@ -93,14 +98,14 @@ public class LiftSim extends Application{
                         10.0, 0.0,
                         5.0, 10.0);
 
-                grid.add(downButton, 2, floors - i + 1);
+                grid.add(downButton, 2, floors - i + 2);
                 downButton.setUserData(i - 1);
                 downButtons[i-1] = downButton;
             }
 
             // add an elevator's inner button to every floor
             Circle innerButton = new Circle(5.0);
-            grid.add(innerButton, 5, floors-i+1);
+            grid.add(innerButton, 5, floors-i+2);
             innerButton.setUserData(i);
             innerButtons[i] = innerButton;
         }
@@ -151,6 +156,13 @@ public class LiftSim extends Application{
         ButtonHandler buttonHandler = new ButtonHandler(lift, grid, runBtn, elevator, upButtons, downButtons, innerButtons);
         runBtn.setOnAction(buttonHandler);
 
+        addLiftBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                test();
+            }
+        });
+
 
         // set scene
 
@@ -158,13 +170,13 @@ public class LiftSim extends Application{
         primaryStage.setTitle("Lift Simulator");
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
-}
 
     /*
     |--------------------------------------------------------------------------
@@ -173,4 +185,12 @@ public class LiftSim extends Application{
     |
     */
 
+    private void test()
+    {   Button runBtn2 = new Button("Run");
+        grid.add(runBtn2, 0,floors+3);
+    }
+
+
+
+}
 
