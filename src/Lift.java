@@ -14,6 +14,7 @@ public class Lift {
     LiftBtn[] upButtons; // Array of the outer buttons showing "up".
     LiftBtn[] downButtons; // Array of the outer buttons showing "down".
     FloorSensor floorSensor = new FloorSensor();  // On when someone is in the floor.
+    int floors;
 
 
     /*
@@ -46,6 +47,8 @@ public class Lift {
     //TODO: remove
     public Lift(int floors)
     {
+        this.floors = floors;
+
         currentFloor = 0;
 
         innerButtons = new LiftBtn[floors+1];
@@ -90,7 +93,21 @@ public class Lift {
 
         currentFloor = nextFloor;
 
-        innerButtons[currentFloor].reset(); // reset button of the floor we moved to.
+        for (LiftBtn innerButton : innerButtons)
+        {
+            if (innerButton.floor == currentFloor) innerButton.reset();
+        }
+
+        for (LiftBtn upButton : upButtons)
+        {
+            if (upButton.floor == currentFloor) upButton.reset();
+        }
+
+        for (LiftBtn downButton : downButtons)
+        {
+            if (downButton.floor == currentFloor) downButton.reset();
+        }
+
     }
 
     /*
