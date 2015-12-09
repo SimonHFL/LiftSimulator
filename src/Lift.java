@@ -13,7 +13,7 @@ public class Lift {
     LiftBtn[] innerButtons;  //Array of inner buttons.
     LiftBtn[] upButtons; // Array of the outer buttons showing "up".
     LiftBtn[] downButtons; // Array of the outer buttons showing "down".
-    FloorSensor floorSensor;  // On when someone is in the floor.
+    FloorSensor floorSensor = new FloorSensor();  // On when someone is in the floor.
 
 
     /*
@@ -75,6 +75,14 @@ public class Lift {
      */
     public void run()
     {
+        // if no one is in elevator, turn off inner buttons
+        if(! floorSensor.on) {
+            for(LiftBtn innerBtn : innerButtons)
+            {
+                innerBtn.reset();
+            }
+        }
+
         int nextFloor = getNextFloor();
 
         if (nextFloor > currentFloor) direction = 1;
@@ -92,10 +100,23 @@ public class Lift {
     |
     */
 
+    /**
+     * Returns the floor that the elevator should go to next.
+     *
+     * - If the elevator is stationary it returns the closest floor
+     *
+     * - If the elevator is going upwards it returns the closest upwards floor,
+     *   or in lack thereof it returns the closest downwards floor
+     *
+     * - If the elevator is going downwards it returns the closest downwards floor,
+     *   or in lack thereof it returns the closest upwards floor
+     *
+     *  @return nextFloor int
+     */
     //TODO: what if two equally close floors
     protected int getNextFloor()
     {
-        ArrayList<LiftBtn> activeButtons = getActiveInnerButtons();
+        ArrayList<LiftBtn> activeButtons = getActiveButtons();
 
         int nextFloor = currentFloor;
 
@@ -152,15 +173,29 @@ public class Lift {
         return nextFloor;
     }
 
-    private ArrayList<LiftBtn> getActiveInnerButtons() {
+    /**
+     * Get all buttons that have been pressed
+     *
+     * @return
+     */
+    private ArrayList<LiftBtn> getActiveButtons() {
         ArrayList<LiftBtn> activeButtons = new ArrayList<LiftBtn>();
-        // check if any inner buttons are pressed
+
         for (LiftBtn innerButton: innerButtons)
         {
-            if (innerButton.on){
-                activeButtons.add(innerButton);
-            }
+            if (innerButton.on) activeButtons.add(innerButton);
         }
+
+        for (LiftBtn upButton: upButtons)
+        {
+            if (upButton.on) activeButtons.add(upButton);
+        }
+
+        for (LiftBtn downButton: downButtons)
+        {
+            if (downButton.on) activeButtons.add(downButton);
+        }
+
         return activeButtons;
     }
 }

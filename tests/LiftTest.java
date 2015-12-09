@@ -58,11 +58,31 @@ public class LiftTest {
         assertFalse(lift.innerButtons[3].on);
     }
 
-    public void it_works_with_up_button() throws Exception {
+    @Test
+    public void it_stops_at_floors_where_up_is_pressed() throws Exception {
         Lift lift = new Lift(10);
         lift.innerButtons[5].push();
         lift.upButtons[3].push();
         lift.run();
-        assertTrue(lift.currentFloor == );
+        assertTrue(lift.currentFloor == 3);
+    }
+
+    @Test
+    public void it_stops_at_floors_where_down_is_pressed() throws Exception {
+        Lift lift = new Lift(10);
+        lift.currentFloor = 10;
+        lift.innerButtons[5].push();
+        lift.downButtons[7].push(); // floor 8
+        lift.run();
+        assertTrue(lift.currentFloor == 8);
+    }
+
+    @Test
+    public void it_ignores_inner_buttons_if_no_one_in_elevator() throws Exception {
+        Lift lift = new Lift(10);
+        lift.floorSensor.toggleOff();
+        lift.innerButtons[5].push();
+        lift.run();
+        assertTrue(lift.currentFloor == 0);
     }
 }
