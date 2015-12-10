@@ -99,8 +99,7 @@ public class Lift implements Serializable{
      *
      *  @return nextFloor int
      */
-    //TODO: what if two equally close floors
-    protected int getNextFloor()
+    private int getNextFloor()
     {
         ArrayList<LiftBtn> activeButtons = getActiveButtons();
 

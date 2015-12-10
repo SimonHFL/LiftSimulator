@@ -1,100 +1,127 @@
-import javafx.scene.layout.GridPane;
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Simon on 09/12/15.
- */
 public class LiftTest {
 
-    GridPane grid;
-
-
-    @Before
-    public void setUp() throws Exception {
-        GridPane grid = new GridPane();
-        this.grid = grid;
-    }
-
-
-    //TODO: more tests, edge cases
     @Test
-    public void testGetNextFloor() throws Exception {
-
-        // test stationary lift
+    public void it_responds_to_inner_buttons_if_occupied() throws Exception {
         Lift lift = new Lift(10);
+        lift.floorSensor.on = true;
         lift.innerButtons[5].push();
-        assertTrue(lift.getNextFloor()==5);
-
-        // test upward going lift
-        Lift lift2 = new Lift(10);
-        lift2.currentFloor = 5;
-        lift2.direction = 1;
-        lift2.innerButtons[10].push();
-        lift2.innerButtons[0].push();
-        assertTrue(lift2.getNextFloor() == 10);
-
-        // test downward going lift
-        Lift lift3 = new Lift(10);
-        lift3.currentFloor = 5;
-        lift3.direction = -1;
-        lift3.innerButtons[10].push();
-        lift3.innerButtons[0].push();
-        assertTrue(lift3.getNextFloor() == 0);
-    }
-
-    @Test
-    public void testRun() throws Exception {
-
-        Lift lift = new Lift(10);
-        lift.innerButtons[5].push();
-        lift.innerButtons[8].push();
-
         lift.run();
-        assertTrue(lift.direction == 1);
         assertTrue(lift.currentFloor == 5);
-        assertFalse(lift.innerButtons[5].on);
-
-        lift.innerButtons[3].push();
-
-        lift.run();
-        assertTrue(lift.direction == 1);
-        assertTrue(lift.currentFloor == 8);
-        assertFalse(lift.innerButtons[8].on);
-
-        lift.run();
-        assertTrue(lift.direction == -1);
-        assertTrue(lift.currentFloor == 3);
-        assertFalse(lift.innerButtons[3].on);
     }
 
     @Test
-    public void it_stops_at_floors_where_up_is_pressed() throws Exception {
-        Lift lift = new Lift(10);
-        lift.innerButtons[5].push();
-        lift.upButtons[3].push();
-        lift.run();
-        assertTrue(lift.currentFloor == 3);
-    }
-
-    @Test
-    public void it_stops_at_floors_where_down_is_pressed() throws Exception {
-        Lift lift = new Lift(10);
-        lift.currentFloor = 10;
-        lift.innerButtons[5].push();
-        lift.downButtons[7].push(); // floor 8
-        lift.run();
-        assertTrue(lift.currentFloor == 8);
-    }
-
-    @Test
-    public void it_ignores_inner_buttons_if_no_one_in_elevator() throws Exception {
+    public void it_ignores_inner_buttons_if_empty() throws Exception {
         Lift lift = new Lift(10);
         lift.floorSensor.on = false;
         lift.innerButtons[5].push();
         lift.run();
         assertTrue(lift.currentFloor == 0);
     }
+
+    @Test
+    public void it_responds_to_up_buttons() throws Exception {
+        // case: elevator occupied
+        Lift lift = new Lift(10);
+        lift.floorSensor.on = true;
+        lift.upButtons[5].push();
+        lift.run();
+        assertTrue(lift.currentFloor == 5);
+
+        // case: elevator empty
+        Lift lift2 = new Lift(10);
+        lift2.floorSensor.on = false;
+        lift2.upButtons[5].push();
+        lift2.run();
+        assertTrue(lift2.currentFloor == 5);
+    }
+
+    @Test
+    public void it_responds_to_down_buttons() throws Exception {
+        // case: elevator occupied
+        Lift lift = new Lift(10);
+        lift.floorSensor.on = true;
+        lift.downButtons[5].push();
+        lift.run();
+        assertTrue(lift.currentFloor == lift.downButtons[5].floor);
+
+        // case: elevator empty
+        Lift lift2 = new Lift(10);
+        lift2.floorSensor.on = false;
+        lift2.downButtons[5].push();
+        lift2.run();
+        assertTrue(lift2.currentFloor == lift.downButtons[5].floor);
+    }
+
+    @Test
+    public void it_continues_going_up_until_done_before_going_down() throws Exception {
+        Lift lift = new Lift(10);
+        lift.currentFloor = 5;
+        lift.floorSensor.on = true;
+        lift.direction = 1;
+        lift.innerButtons[10].push();
+        lift.innerButtons[6].push();
+        lift.innerButtons[4].push();
+        lift.run();
+        assertTrue(lift.currentFloor == 6);
+        lift.run();
+        assertTrue(lift.currentFloor == 10);
+        lift.run();
+        assertTrue(lift.currentFloor == 4);
+    }
+
+    @Test
+    public void it_continues_going_down_until_done_before_going_up() throws Exception {
+        Lift lift = new Lift(10);
+        lift.currentFloor = 5;
+        lift.floorSensor.on = true;
+        lift.direction = -1;
+        lift.innerButtons[0].push();
+        lift.innerButtons[6].push();
+        lift.innerButtons[4].push();
+        lift.run();
+        assertTrue(lift.currentFloor == 4);
+        lift.run();
+        assertTrue(lift.currentFloor == 0);
+        lift.run();
+        assertTrue(lift.currentFloor == 6);
+    }
+
+    @Test
+    public void it_stays_if_no_buttons_are_pressed() throws Exception {
+        Lift lift = new Lift(10);
+        lift.run();
+        assertTrue(lift.currentFloor == 0);
+    }
+
+    @Test
+    public void it_gives_no_preference_to_button_type() throws Exception {
+        // case: inner button is closest
+        Lift lift = new Lift(10);
+        lift.floorSensor.on = true;
+        lift.innerButtons[5].push();
+        lift.downButtons[7].push(); // floor 8
+        lift.run();
+        assertTrue(lift.currentFloor == 5);
+
+        // case: down button is closest
+        Lift lift2 = new Lift(10);
+        lift2.floorSensor.on = true;
+        lift2.downButtons[3].push(); // floor 8
+        lift2.innerButtons[5].push();
+        lift2.run();
+        assertTrue(lift2.currentFloor == lift2.downButtons[3].floor);
+
+        // case: up button is closest
+        Lift lift3 = new Lift(10);
+        lift3.floorSensor.on = true;
+        lift3.upButtons[3].push(); // floor 8
+        lift3.innerButtons[5].push();
+        lift3.run();
+        assertTrue(lift3.currentFloor == lift3.upButtons[3].floor);
+    }
+
 }

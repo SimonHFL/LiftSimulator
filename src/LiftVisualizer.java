@@ -38,9 +38,7 @@ public class LiftVisualizer implements Serializable {
     public GridPane visualize() {
 
         createView();
-
         setActions();
-
         return grid;
     }
 
@@ -107,7 +105,7 @@ public class LiftVisualizer implements Serializable {
         grid.add(elevatorTitle, 4, startingRow + 1, 2, 1);
 
         Rectangle elevator = new Rectangle(10.0,10.0);
-        elevator.setFill(lift.floorSensor.on ? Color.GREEN : Color.RED);
+        elevator.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
         grid.add(elevator, 4, startingRow + lift.floors + 2 - lift.currentFloor);
         elevatorShape = elevator;
 
@@ -195,7 +193,7 @@ public class LiftVisualizer implements Serializable {
             @Override
             public void handle(MouseEvent event) {
                 lift.floorSensor.toggle();
-                elevatorShape.setFill(lift.floorSensor.on ? Color.GREEN : Color.RED);
+                elevatorShape.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
             }
         });
 
