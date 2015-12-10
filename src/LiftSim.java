@@ -1,3 +1,4 @@
+import infrastructure.NegativeFloorsException;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -106,13 +107,20 @@ public class LiftSim extends Application{
         addLiftBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                try {
-                    Lift lift = new Lift(Integer.parseInt(floorsInput.getText()));
+                try
+                {
+                    Integer floors = Integer.parseInt(floorsInput.getText());
+
+                    Lift lift = new Lift(floors);
                     lifts.add(lift);
                     vbox.getChildren().addAll(lift.visualizer.visualize());
                     setSuccessMessage("Lift Added");
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException e)
+                {
                     setErrorMessage("Please enter an integer");
+                } catch (NegativeFloorsException e)
+                {
+                    setErrorMessage(e.getMessage());
                 }
             }
         });
@@ -133,7 +141,6 @@ public class LiftSim extends Application{
                 }
 
                 lifts.clear();
-
                 Serializer.clear();
                 setSuccessMessage("Reset!");
             }

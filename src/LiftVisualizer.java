@@ -38,7 +38,6 @@ public class LiftVisualizer implements Serializable {
      * Creates a grid pane with a visual representation of the lift
      */
     public GridPane visualize() {
-
         createView();
         setActions();
         return grid;
@@ -92,7 +91,7 @@ public class LiftVisualizer implements Serializable {
         downBtnShapes = new Polygon[lift.floors];
         innerBtnShapes = new Circle[lift.floors + 1];
 
-        this.grid = new GridPane();
+        grid = new GridPane();
 
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);

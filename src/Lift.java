@@ -1,3 +1,5 @@
+import infrastructure.NegativeFloorsException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -18,8 +20,10 @@ public class Lift implements Serializable{
     |
     */
 
-    public Lift(int floors)
-    {
+    public Lift(int floors) throws NegativeFloorsException {
+
+        if (floors <= 0) throw new NegativeFloorsException("Please supply a positive number of floors");
+
         this.floors = floors;
 
         // create buttons
@@ -45,9 +49,8 @@ public class Lift implements Serializable{
     /**
      * Moves the elevator to the next floor and resets buttons corresponding to that floor.
      */
-    public void run()
-    {
-        // if no one is in elevator, turn off inner buttons
+    public void run() {
+        // if no one is in the elevator, turn off inner buttons
         if(! floorSensor.on) {
             for(LiftBtn innerBtn : innerButtons)
             {
@@ -62,22 +65,9 @@ public class Lift implements Serializable{
 
         currentFloor = nextFloor;
 
-        // reset buttons if they are on current floor.
-        for (LiftBtn innerButton : innerButtons)
-        {
-            if (innerButton.floor == currentFloor) innerButton.reset();
-        }
-
-        for (LiftBtn upButton : upButtons)
-        {
-            if (upButton.floor == currentFloor) upButton.reset();
-        }
-
-        for (LiftBtn downButton : downButtons)
-        {
-            if (downButton.floor == currentFloor) downButton.reset();
-        }
+        resetButtons();
     }
+
 
     /*
     |--------------------------------------------------------------------------
@@ -99,8 +89,7 @@ public class Lift implements Serializable{
      *
      *  @return nextFloor int
      */
-    private int getNextFloor()
-    {
+    private int getNextFloor() {
         ArrayList<LiftBtn> activeButtons = getActiveButtons();
 
         int nextFloor = currentFloor;
@@ -179,5 +168,25 @@ public class Lift implements Serializable{
         }
 
         return activeButtons;
+    }
+
+    /**
+     *  Resets buttons if their floor is the current floor
+     */
+    private void resetButtons() {
+        for (LiftBtn innerButton : innerButtons)
+        {
+            if (innerButton.floor == currentFloor) innerButton.reset();
+        }
+
+        for (LiftBtn upButton : upButtons)
+        {
+            if (upButton.floor == currentFloor) upButton.reset();
+        }
+
+        for (LiftBtn downButton : downButtons)
+        {
+            if (downButton.floor == currentFloor) downButton.reset();
+        }
     }
 }

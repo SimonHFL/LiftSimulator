@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 public class LiftTest {
 
     @Test
-    public void it_responds_to_inner_buttons_if_occupied() throws Exception {
+    public void it_responds_to_inner_buttons_if_floor_sensor_is_on() throws Exception {
         Lift lift = new Lift(10);
         lift.floorSensor.on = true;
         lift.innerButtons[5].push();
@@ -14,7 +14,7 @@ public class LiftTest {
     }
 
     @Test
-    public void it_ignores_inner_buttons_if_empty() throws Exception {
+    public void it_ignores_inner_buttons_if_floor_sensor_is_off() throws Exception {
         Lift lift = new Lift(10);
         lift.floorSensor.on = false;
         lift.innerButtons[5].push();

@@ -42,7 +42,7 @@ public class Serializer
 
         }catch(IOException | ClassNotFoundException i)
         {
-            System.out.println("File not found");
+            System.out.println("No object saved");
         }
 
         return null;
