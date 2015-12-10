@@ -8,19 +8,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.util.ArrayList;
+import infrastructure.Serializer;
 
 public class LiftSim extends Application{
 
     ArrayList<Lift> lifts = new ArrayList<Lift>();
-    final Text errorMessage = new Text();
+    final Text message = new Text();
     TextField floorsInput = new TextField("floors");
-
+    VBox vbox;
 
     /*
     |--------------------------------------------------------------------------
@@ -41,41 +39,42 @@ public class LiftSim extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        VBox vbox = new VBox();
+        vbox = new VBox();
         HBox hbox = new HBox();
 
         Button runBtn = new Button("Run");
+        Button saveBtn = new Button("Save");
+        Button resetBtn = new Button("Reset");
         Button addLiftBtn = new Button("Add Lift");
         floorsInput = new TextField("floors");
 
-        hbox.getChildren().setAll(runBtn, addLiftBtn, floorsInput);
+        hbox.getChildren().setAll(runBtn, saveBtn, resetBtn, addLiftBtn, floorsInput);
 
         vbox.getChildren().setAll(hbox);
 
-        HBox errorBox = new HBox(10);
-        errorBox.setAlignment(Pos.BOTTOM_LEFT);
-        errorBox.getChildren().add(errorMessage);
-        vbox.getChildren().addAll(errorBox);
+        HBox messageBox = new HBox(10);
+        messageBox.setAlignment(Pos.BOTTOM_LEFT);
+        messageBox.getChildren().add(message);
+        vbox.getChildren().addAll(messageBox);
+
+        loadLifts();
 
         runBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                if(lifts.isEmpty())
-                {
+                message.setText("");
+
+                if (lifts.isEmpty()) {
                     setErrorMessage("No lifts are available");
                     return;
                 }
 
-                for (Lift lift : lifts)
-                {
+                for (Lift lift : lifts) {
                     lift.run();
                     lift.visualizer.moveElevator();
                     lift.visualizer.updateButtons();
                 }
-
-                errorMessage.setText("");
             }
         });
 
@@ -86,15 +85,38 @@ public class LiftSim extends Application{
                     Lift lift = new Lift( Integer.parseInt(floorsInput.getText()) );
                     lifts.add(lift);
                     vbox.getChildren().addAll(lift.visualizer.visualize());
-                    errorMessage.setText("");
+                    setSuccessMessage("Lift Added");
                 } catch (NumberFormatException e) {
                     setErrorMessage("Please enter an integer");
                 }
             }
         });
 
+        saveBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Serializer.save(lifts);
+                setSuccessMessage("Saved!");
+            }
+        });
+
+        resetBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                for (Lift lift : lifts)
+                {
+                    vbox.getChildren().remove(lift.visualizer.grid);
+                }
+
+                lifts.clear();
+
+                Serializer.clear();
+                setSuccessMessage("Reset!");
+            }
+        });
+
         // set scene
-        Scene scene = new Scene(vbox, 300, 275);
+        Scene scene = new Scene(vbox, 600, 500);
         primaryStage.setTitle("Lift Simulator");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -112,10 +134,36 @@ public class LiftSim extends Application{
     |
     */
 
-    private void setErrorMessage(String message)
+    private void setErrorMessage(String text)
     {
-        errorMessage.setFill(Color.FIREBRICK);
-        errorMessage.setText(message);
+        message.setFill(Color.FIREBRICK);
+        message.setText(text);
+    }
+
+    private void setSuccessMessage(String text)
+    {
+        message.setFill(Color.GREEN);
+        message.setText(text);
+    }
+
+
+    /**
+     * Loads saved lifts
+     */
+    private void loadLifts() {
+
+        ArrayList<Lift> loadedLifts = (ArrayList<Lift>) Serializer.load();
+
+        if (loadedLifts != null)
+        {
+            lifts = loadedLifts;
+
+            for(Lift lift : lifts)
+            {
+                vbox.getChildren().addAll(lift.visualizer.visualize());
+                lift.visualizer.updateButtons();
+            }
+        }
     }
 
 }

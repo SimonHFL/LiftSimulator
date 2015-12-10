@@ -9,13 +9,15 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class LiftVisualizer {
+import java.io.Serializable;
 
-    Polygon[] upBtnShapes;
-    Polygon[] downBtnShapes;
-    Circle[] innerBtnShapes;
-    Rectangle elevatorShape;
-    GridPane grid;
+public class LiftVisualizer implements Serializable {
+
+    transient Polygon[] upBtnShapes;
+    transient Polygon[] downBtnShapes;
+    transient Circle[] innerBtnShapes;
+    transient Rectangle elevatorShape;
+    transient GridPane grid;
     Lift lift;
 
 
@@ -85,6 +87,7 @@ public class LiftVisualizer {
      */
     private void createView() {
         int startingRow = 0;
+        System.out.println(lift.currentFloor);
 
         upBtnShapes = new Polygon[lift.floors];
         downBtnShapes = new Polygon[lift.floors];
@@ -104,8 +107,8 @@ public class LiftVisualizer {
         grid.add(elevatorTitle, 4, startingRow + 1, 2, 1);
 
         Rectangle elevator = new Rectangle(10.0,10.0);
-        elevator.setFill(Color.RED);
-        grid.add(elevator, 4, startingRow + lift.floors + 2);
+        elevator.setFill(lift.floorSensor.on ? Color.GREEN : Color.RED);
+        grid.add(elevator, 4, startingRow + lift.floors + 2 - lift.currentFloor);
         elevatorShape = elevator;
 
         for(int i =0; i <= lift.floors; i++)

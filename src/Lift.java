@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Lift {
+public class Lift implements Serializable{
     int direction;  // +1 when the current move direction is up, -1 when down
     int currentFloor = 0;
     int floors;

@@ -1,8 +1,7 @@
-import javafx.scene.shape.Shape;
+import java.io.Serializable;
 
-public class LiftBtn {
+public class LiftBtn implements Serializable{
     boolean on;  // When on, somebody has pushed the button and the light is red. Otherwise it is green.
-    Shape btn; // Reference to a JavaFX circle, rectangle or polygon on the screen
     int floor;
 
 

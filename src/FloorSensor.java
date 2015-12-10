@@ -1,10 +1,10 @@
-import javafx.scene.shape.Shape;
+import java.io.Serializable;
 
 /**
  * Is similar to LiftBtn, but behaves differently. For instance, it toggles on
  * when clicked and it may use different colors. You may use sub-classing.
  */
-public class FloorSensor {
+public class FloorSensor implements Serializable{
     boolean on;  // When on, somebody has pushed the button and the light is red. Otherwise it is green.
     //TODO: shape?
 
