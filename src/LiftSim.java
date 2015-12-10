@@ -76,21 +76,21 @@ public class LiftSim extends Application{
                     lift.run();
 
                     // move elevator
-                    lift.grid.getChildren().remove(lift.elevatorShape);
-                    lift.grid.add(lift.elevatorShape, 4, lift.floors + 2 - lift.currentFloor);
+                    lift.visualizer.grid.getChildren().remove(lift.visualizer.elevatorShape);
+                    lift.visualizer.grid.add(lift.visualizer.elevatorShape, 4, lift.floors + 2 - lift.currentFloor);
 
                     // set button colors
-                    for (Polygon upBtnShape : lift.upBtnShapes) {
+                    for (Polygon upBtnShape : lift.visualizer.upBtnShapes) {
                         if (lift.upButtons[(int) upBtnShape.getUserData()].on) upBtnShape.setFill(Color.RED);
                         else upBtnShape.setFill(Color.BLACK);
                     }
 
-                    for (Polygon downButton : lift.downBtnShapes) {
+                    for (Polygon downButton : lift.visualizer.downBtnShapes) {
                         if (lift.downButtons[(int) downButton.getUserData()].on) downButton.setFill(Color.RED);
                         else downButton.setFill(Color.BLACK);
                     }
 
-                    for (Circle innerButton : lift.innerBtnShapes) {
+                    for (Circle innerButton : lift.visualizer.innerBtnShapes) {
                         if (lift.innerButtons[(int) innerButton.getUserData()].on) innerButton.setFill(Color.RED);
                         else innerButton.setFill(Color.BLACK);
                     }
@@ -108,7 +108,7 @@ public class LiftSim extends Application{
                     int floors = Integer.parseInt(floorsInput.getText());
                     Lift lift = new Lift(floors);
                     lifts.add(lift);
-                    vbox.getChildren().addAll(lift.grid);
+                    vbox.getChildren().addAll(lift.visualizer.visualize());
                     errorMessage.setText("");
                 } catch (NumberFormatException e) {
                     setErrorMessage("Please enter an integer");

@@ -23,6 +23,7 @@ public class Lift {
     Circle[] innerBtnShapes;
     Rectangle elevatorShape;
     GridPane grid;
+    LiftVisualizer visualizer = new LiftVisualizer(this);
 
     /*
     |--------------------------------------------------------------------------
@@ -34,8 +35,6 @@ public class Lift {
     public Lift(int floors)
     {
         this.floors = floors;
-
-        visualize();
 
         // create buttons
         innerButtons = new LiftBtn[floors+1];
