@@ -19,15 +19,71 @@ public class LiftVisualizer {
     Lift lift;
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Public  Methods
+    |--------------------------------------------------------------------------
+    |
+    */
+
     public LiftVisualizer(Lift lift) {
         this.lift = lift;
     }
 
     /**
-     * Create a grid pane with a visual representation of the lift
+     * Creates a grid pane with a visual representation of the lift
      */
     public GridPane visualize() {
 
+        createView();
+
+        setActions();
+
+        return grid;
+    }
+
+    /**
+     * Check if buttons are on and update shapes accordingly
+     */
+    public void updateButtons()
+    {
+        for (Polygon upBtnShape : upBtnShapes) {
+            if (lift.upButtons[(int) upBtnShape.getUserData()].on) upBtnShape.setFill(Color.RED);
+            else upBtnShape.setFill(Color.BLACK);
+        }
+
+        for (Polygon downButton : downBtnShapes) {
+            if (lift.downButtons[(int) downButton.getUserData()].on) downButton.setFill(Color.RED);
+            else downButton.setFill(Color.BLACK);
+        }
+
+        for (Circle innerButton : innerBtnShapes) {
+            if (lift.innerButtons[(int) innerButton.getUserData()].on) innerButton.setFill(Color.RED);
+            else innerButton.setFill(Color.BLACK);
+        }
+    }
+
+    /**
+     * Move the elevator shape to the current floor
+     */
+    public void moveElevator()
+    {
+        grid.getChildren().remove(elevatorShape);
+        grid.add(lift.visualizer.elevatorShape, 4, lift.floors + 2 - lift.currentFloor);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Private  Methods
+    |--------------------------------------------------------------------------
+    |
+    */
+
+    /**
+     * Create the layout of the lift
+     */
+    private void createView() {
         int startingRow = 0;
 
         upBtnShapes = new Polygon[lift.floors];
@@ -92,8 +148,12 @@ public class LiftVisualizer {
             innerButton.setUserData(i);
             innerBtnShapes[i] = innerButton;
         }
+    }
 
-        //actions
+    /**
+     * Sets actions on elements in the view
+     */
+    private void setActions() {
 
         for (Polygon upButton : upBtnShapes) {
 
@@ -128,14 +188,13 @@ public class LiftVisualizer {
             });
         }
 
-        elevator.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        elevatorShape.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 lift.floorSensor.toggle();
-                elevator.setFill(lift.floorSensor.on ? Color.GREEN : Color.RED);
+                elevatorShape.setFill(lift.floorSensor.on ? Color.GREEN : Color.RED);
             }
         });
 
-        return grid;
     }
 }

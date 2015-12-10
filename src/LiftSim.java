@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class LiftSim extends Application{
 
-    //int floors = 5;
     ArrayList<Lift> lifts = new ArrayList<Lift>();
     final Text errorMessage = new Text();
     TextField floorsInput = new TextField("floors");
@@ -44,11 +43,9 @@ public class LiftSim extends Application{
     public void start(Stage primaryStage) throws Exception {
 
         VBox vbox = new VBox();
-
         HBox hbox = new HBox();
 
         Button runBtn = new Button("Run");
-
         Button addLiftBtn = new Button("Add Lift");
         floorsInput = new TextField("floors");
 
@@ -74,30 +71,11 @@ public class LiftSim extends Application{
                 for (Lift lift : lifts)
                 {
                     lift.run();
-
-                    // move elevator
-                    lift.visualizer.grid.getChildren().remove(lift.visualizer.elevatorShape);
-                    lift.visualizer.grid.add(lift.visualizer.elevatorShape, 4, lift.floors + 2 - lift.currentFloor);
-
-                    // set button colors
-                    for (Polygon upBtnShape : lift.visualizer.upBtnShapes) {
-                        if (lift.upButtons[(int) upBtnShape.getUserData()].on) upBtnShape.setFill(Color.RED);
-                        else upBtnShape.setFill(Color.BLACK);
-                    }
-
-                    for (Polygon downButton : lift.visualizer.downBtnShapes) {
-                        if (lift.downButtons[(int) downButton.getUserData()].on) downButton.setFill(Color.RED);
-                        else downButton.setFill(Color.BLACK);
-                    }
-
-                    for (Circle innerButton : lift.visualizer.innerBtnShapes) {
-                        if (lift.innerButtons[(int) innerButton.getUserData()].on) innerButton.setFill(Color.RED);
-                        else innerButton.setFill(Color.BLACK);
-                    }
+                    lift.visualizer.moveElevator();
+                    lift.visualizer.updateButtons();
                 }
 
                 errorMessage.setText("");
-
             }
         });
 
@@ -105,8 +83,7 @@ public class LiftSim extends Application{
             @Override
             public void handle(ActionEvent event) {
                 try {
-                    int floors = Integer.parseInt(floorsInput.getText());
-                    Lift lift = new Lift(floors);
+                    Lift lift = new Lift( Integer.parseInt(floorsInput.getText()) );
                     lifts.add(lift);
                     vbox.getChildren().addAll(lift.visualizer.visualize());
                     errorMessage.setText("");

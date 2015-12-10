@@ -15,7 +15,7 @@ public class LiftBtn {
 
     /**
      * // The constructor. The caller has created the button Shape,
-     e.g. a circle, and passes it on to LiftBtn.
+     * e.g. a circle, and passes it on to LiftBtn.
      */
 
 
