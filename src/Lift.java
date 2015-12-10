@@ -43,8 +43,7 @@ public class Lift implements Serializable{
     }
 
     /**
-     * Find the next floor and move the lift there. Reset various buttons. Move
-     * the lift (the small rectangle) on the screen.
+     * Moves the elevator to the next floor and resets buttons corresponding to that floor.
      */
     public void run()
     {
@@ -114,7 +113,7 @@ public class Lift implements Serializable{
         int closestUpwardDistance = Integer.MAX_VALUE;
 
         int closestDownwardFloor = currentFloor;
-        int closestDownwarDistance = Integer.MAX_VALUE;
+        int closestDownwardDistance = Integer.MAX_VALUE;
 
         for(LiftBtn btn: activeButtons)
         {
@@ -133,10 +132,10 @@ public class Lift implements Serializable{
                 closestUpwardDistance = distance;
             }
 
-            if (distance < 0 && absDistance < closestDownwarDistance)
+            if (distance < 0 && absDistance < closestDownwardDistance)
             {
                 closestDownwardFloor = btn.floor;
-                closestDownwarDistance = absDistance;
+                closestDownwardDistance = absDistance;
             }
         }
 

@@ -7,6 +7,10 @@ public class Serializer
 
     static String filePath = "tmp/lifts.ser";
 
+    /**
+     * Serialize the object and save to a file
+     * @param object
+     */
     public static void save(Serializable object)
     {
         try
@@ -23,6 +27,10 @@ public class Serializer
         }
     }
 
+    /**
+     * Load a serialized object from a file
+     * @return
+     */
     public static Object load()
     {
         try
@@ -40,6 +48,9 @@ public class Serializer
         return null;
     }
 
+    /**
+     * Deletes the file with the serialized object
+     */
     public static void clear() {
         new File(filePath).delete();
     }

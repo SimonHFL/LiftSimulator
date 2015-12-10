@@ -92,7 +92,7 @@ public class LiftTest {
     @Test
     public void it_ignores_inner_buttons_if_no_one_in_elevator() throws Exception {
         Lift lift = new Lift(10);
-        lift.floorSensor.toggleOff();
+        lift.floorSensor.on = false;
         lift.innerButtons[5].push();
         lift.run();
         assertTrue(lift.currentFloor == 0);
