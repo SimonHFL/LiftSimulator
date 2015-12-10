@@ -8,12 +8,11 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-
 import java.util.ArrayList;
 
 public class Lift {
     int direction;  // +1 when the current move direction is up, -1 when down
-    int currentFloor;
+    int currentFloor = 0;
     int floors;
     FloorSensor floorSensor = new FloorSensor();
     LiftBtn[] innerButtons;
@@ -38,8 +37,7 @@ public class Lift {
 
         visualize();
 
-        currentFloor = 0; //TODO: set in parameter
-
+        // create buttons
         innerButtons = new LiftBtn[floors+1];
         for(int i = 0; i<=floors; i++)
         {
@@ -57,7 +55,6 @@ public class Lift {
         {
             downButtons[i] = new LiftBtn(i+1);
         }
-
 
     }
 
@@ -82,6 +79,7 @@ public class Lift {
 
         currentFloor = nextFloor;
 
+        // reset buttons if they are on current floor.
         for (LiftBtn innerButton : innerButtons)
         {
             if (innerButton.floor == currentFloor) innerButton.reset();
@@ -158,17 +156,14 @@ public class Lift {
             }
         }
 
-        // if no direction
         if (direction == 0) nextFloor = closestFloor;
 
-        // if going upwards
         if (direction == 1 )
         {
             if(closestUpwardFloor != currentFloor) nextFloor = closestUpwardFloor;
             else nextFloor = closestDownwardFloor;
         }
 
-        // if going downwards
         if (direction == -1)
         {
             if(closestDownwardFloor != currentFloor) nextFloor = closestDownwardFloor;
