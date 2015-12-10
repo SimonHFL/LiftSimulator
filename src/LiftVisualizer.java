@@ -3,6 +3,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -16,7 +17,8 @@ public class LiftVisualizer implements Serializable {
     transient Polygon[] upBtnShapes;
     transient Polygon[] downBtnShapes;
     transient Circle[] innerBtnShapes;
-    transient Rectangle elevatorShape;
+    transient GridPane elevatorShape;
+    transient Rectangle elevatorFloor;
     transient GridPane grid;
     Lift lift;
 
@@ -85,7 +87,6 @@ public class LiftVisualizer implements Serializable {
      */
     private void createView() {
         int startingRow = 0;
-        System.out.println(lift.currentFloor);
 
         upBtnShapes = new Polygon[lift.floors];
         downBtnShapes = new Polygon[lift.floors];
@@ -104,10 +105,19 @@ public class LiftVisualizer implements Serializable {
         Text elevatorTitle = new Text("Elevator");
         grid.add(elevatorTitle, 4, startingRow + 1, 2, 1);
 
-        Rectangle elevator = new Rectangle(10.0,10.0);
-        elevator.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
-        grid.add(elevator, 4, startingRow + lift.floors + 2 - lift.currentFloor);
-        elevatorShape = elevator;
+        elevatorShape = new GridPane();
+
+        HBox elevatorTop = new HBox();
+        elevatorTop.setStyle("-fx-background-color: #000000; -fx-padding: 5, 0, 0, 0;");
+
+        elevatorFloor = new Rectangle(10.0, 5.0);
+        elevatorFloor.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
+
+        elevatorShape.add(elevatorTop, 0, 0);
+        elevatorShape.add(elevatorFloor, 0, 1);
+
+        grid.add(elevatorShape, 4, startingRow + lift.floors + 2 - lift.currentFloor);
+
 
         for(int i =0; i <= lift.floors; i++)
         {
@@ -193,7 +203,7 @@ public class LiftVisualizer implements Serializable {
             @Override
             public void handle(MouseEvent event) {
                 lift.floorSensor.toggle();
-                elevatorShape.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
+                elevatorFloor.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
             }
         });
 
