@@ -28,21 +28,15 @@ public class Lift implements Serializable{
 
         // create buttons
         innerButtons = new LiftBtn[floors+1];
+        upButtons = new LiftBtn[floors];
+        downButtons = new LiftBtn[floors];
+
         for(int i = 0; i<=floors; i++)
         {
             innerButtons[i] = new LiftBtn(i);
-        }
-
-        upButtons = new LiftBtn[floors];
-        for(int i = 0; i<floors; i++)
-        {
-            upButtons[i] = new LiftBtn(i);
-        }
-
-        downButtons = new LiftBtn[floors];
-        for(int i = 0; i<floors; i++)
-        {
+            if (i == floors) break;
             downButtons[i] = new LiftBtn(i+1);
+            upButtons[i] = new LiftBtn(i);
         }
     }
 
@@ -174,19 +168,9 @@ public class Lift implements Serializable{
      *  Resets buttons if their floor is the current floor
      */
     private void resetButtons() {
-        for (LiftBtn innerButton : innerButtons)
+        for (LiftBtn button : getActiveButtons())
         {
-            if (innerButton.floor == currentFloor) innerButton.reset();
-        }
-
-        for (LiftBtn upButton : upButtons)
-        {
-            if (upButton.floor == currentFloor) upButton.reset();
-        }
-
-        for (LiftBtn downButton : downButtons)
-        {
-            if (downButton.floor == currentFloor) downButton.reset();
+            if (button.floor == currentFloor) button.reset();
         }
     }
 }
