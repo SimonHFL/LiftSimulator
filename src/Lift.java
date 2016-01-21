@@ -84,12 +84,8 @@ public class Lift implements Serializable{
      *  @return nextFloor int
      */
     private int getNextFloor() {
-        ArrayList<LiftBtn> activeButtons = getActiveButtons();
 
         int nextFloor = currentFloor;
-
-        int closestFloor = currentFloor;
-        int closestDistance = Integer.MAX_VALUE;
 
         int closestUpwardFloor = currentFloor;
         int closestUpwardDistance = Integer.MAX_VALUE;
@@ -97,16 +93,10 @@ public class Lift implements Serializable{
         int closestDownwardFloor = currentFloor;
         int closestDownwardDistance = Integer.MAX_VALUE;
 
-        for(LiftBtn btn: activeButtons)
+        for(LiftBtn btn: getActiveButtons())
         {
             int distance = btn.floor - currentFloor;
             int absDistance = Math.abs(distance);
-
-            if(absDistance < closestDistance)
-            {
-                closestFloor = btn.floor;
-                closestDistance = absDistance;
-            }
 
             if (distance > 0 && distance < closestUpwardDistance)
             {
@@ -121,19 +111,11 @@ public class Lift implements Serializable{
             }
         }
 
-        if (direction == 0) nextFloor = closestFloor;
+        if (direction == 0) nextFloor = closestDownwardDistance < closestUpwardDistance ? closestDownwardFloor : closestUpwardFloor;
 
-        if (direction == 1 )
-        {
-            if(closestUpwardFloor != currentFloor) nextFloor = closestUpwardFloor;
-            else nextFloor = closestDownwardFloor;
-        }
+        if (direction == 1) nextFloor = closestUpwardFloor != currentFloor ? closestUpwardFloor : closestDownwardFloor;
 
-        if (direction == -1)
-        {
-            if(closestDownwardFloor != currentFloor) nextFloor = closestDownwardFloor;
-            else nextFloor = closestUpwardFloor;
-        }
+        if (direction == -1) nextFloor = closestDownwardFloor != currentFloor ? closestDownwardFloor : closestUpwardFloor;
 
         return nextFloor;
     }
