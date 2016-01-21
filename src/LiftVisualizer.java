@@ -110,7 +110,7 @@ public class LiftVisualizer implements Serializable {
         elevatorTop.setStyle("-fx-background-color: #000000; -fx-padding: 5, 0, 0, 0;");
 
         elevatorFloor = new Rectangle(10.0, 5.0);
-        elevatorFloor.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
+        elevatorFloor.setFill(lift.isEmpty ? Color.GREEN : Color.RED);
 
         elevatorShape.add(elevatorTop, 0, 0);
         elevatorShape.add(elevatorFloor, 0, 1);
@@ -201,8 +201,8 @@ public class LiftVisualizer implements Serializable {
         elevatorShape.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                lift.floorSensor.toggle();
-                elevatorFloor.setFill(lift.floorSensor.on ? Color.RED : Color.GREEN);
+                lift.isEmpty = ! lift.isEmpty;
+                elevatorFloor.setFill(lift.isEmpty ? Color.GREEN : Color.RED);
             }
         });
 

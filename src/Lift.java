@@ -7,7 +7,7 @@ public class Lift implements Serializable{
     int direction;  // +1 when the current move direction is up, -1 when down
     int currentFloor = 0;
     int floors;
-    FloorSensor floorSensor = new FloorSensor();
+    boolean isEmpty = true;
     LiftBtn[] innerButtons;
     LiftBtn[] upButtons;
     LiftBtn[] downButtons;
@@ -45,7 +45,7 @@ public class Lift implements Serializable{
      */
     public void run() {
         // if no one is in the elevator, turn off inner buttons
-        if(! floorSensor.on) {
+        if(isEmpty) {
             for(LiftBtn innerBtn : innerButtons)
             {
                 innerBtn.reset();
